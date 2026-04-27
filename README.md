@@ -1,0 +1,1 @@
+# Gestao_de_Acervo_Digital_com_TypeScript
