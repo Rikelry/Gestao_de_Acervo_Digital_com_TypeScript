@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acervo de Livros</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <span class="header__icon">📚</span>
+      <h1 class="header__title">Acervo de Livros</h1>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Filtro por categoria -->
+    <section class="filters">
+      <button class="filter-btn filter-btn--active" data-category="todos">Todos</button>
+      <button class="filter-btn" data-category="Programação">Programação</button>
+      <button class="filter-btn" data-category="Design">Design</button>
+      <button class="filter-btn" data-category="Ficção">Ficção</button>
+      <button class="filter-btn" data-category="Boas Práticas">Boas Práticas</button>
+      <button class="filter-btn" data-category="TypeScript">TypeScript</button>
+      <button class="filter-btn" data-category="UX">UX</button>
+      <button class="filter-btn" data-category="Cyberpunk">Cyberpunk</button>
+    </section>
+
+    <!-- Grid de livros -->
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <!-- Modal de detalhes -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <button class="modal__close" id="modalClose">✕</button>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const livros = [
+      {
+        id: 1,
+        titulo: "Clean Code",
+        autor: "Robert C. Martin",
+        anoPublicacao: 2008,
+        disponivel: true,
+        tags: ["Programação", "Boas Práticas"],
+        descricao:
+          "Um guia prático para escrever código limpo, legível e de fácil manutenção.",
+      },
+      {
+        id: "ts-002",
+        titulo: "Programming TypeScript",
+        autor: "Boris Cherny",
+        anoPublicacao: 2019,
+        disponivel: false,
+        tags: ["Programação", "TypeScript"],
+        descricao:
+          "Mergulhe fundo no sistema de tipos do TypeScript e aprenda a usá-lo com segurança.",
+      },
+      {
+        id: 3,
+        titulo: "The Design of Everyday Things",
+        autor: "Don Norman",
+        anoPublicacao: 1988,
+        disponivel: true,
+        tags: ["Design", "UX"],
+        descricao:
+          "Um clássico sobre como o design centrado no usuário transforma produtos cotidianos.",
+      },
+      {
+        id: 4,
+        titulo: "Neuromancer",
+        autor: "William Gibson",
+        anoPublicacao: 1984,
+        disponivel: true,
+        tags: ["Ficção", "Cyberpunk"],
+        descricao:
+          "O romance que definiu o gênero cyberpunk e inspirou décadas de ficção científica.",
+      },
+    ];
+
+    const tagColors = {
+      Programação: "#6366f1",
+      "Boas Práticas": "#10b981",
+      TypeScript: "#3b82f6",
+      Design: "#f59e0b",
+      UX: "#ec4899",
+      Ficção: "#8b5cf6",
+      Cyberpunk: "#ef4444",
+    };
+
+    function criarCard(livro) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.tags = livro.tags.join(",");
+
+      const tagsHtml = livro.tags
+        .map(
+          (tag) =>
+            `<span class="tag" style="background:${tagColors[tag] ?? "#64748b"}">${tag}</span>`
+        )
+        .join("");
+
+      card.innerHTML = `
+          <div class="card__cover">
+            <span class="card__emoji">${livro.disponivel ? "📖" : "🔒"}</span>
+          </div>
+          <div class="card__body">
+            <h2 class="card__title">${livro.titulo}</h2>
+            <p class="card__autor">${livro.autor} · ${livro.anoPublicacao}</p>
+            <div class="card__tags">${tagsHtml}</div>
+            <span class="card__status ${livro.disponivel ? "card__status--ok" : "card__status--off"}">
+              ${livro.disponivel ? "Disponível" : "Emprestado"}
+            </span>
+          </div>
+        `;
+
+      card.addEventListener("click", () => abrirModal(livro));
+      return card;
+    }
+
+    function renderizar(filtro = "todos") {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      const filtrados =
+        filtro === "todos"
+          ? livros
+          : livros.filter((l) => l.tags.includes(filtro));
+
+      if (filtrados.length === 0) {
+        grid.innerHTML = `<p class="empty">Nenhum livro encontrado nessa categoria.</p>`;
+        return;
+      }
+
+      filtrados.forEach((livro) => grid.appendChild(criarCard(livro)));
+    }
+
+    function abrirModal(livro) {
+      const tagsHtml = livro.tags
+        .map(
+          (tag) =>
+            `<span class="tag" style="background:${tagColors[tag] ?? "#64748b"}">${tag}</span>`
+        )
+        .join("");
+
+      document.getElementById("modalBody").innerHTML = `
+          <div class="modal__cover">
+            <span class="modal__emoji">${livro.disponivel ? "📖" : "🔒"}</span>
+          </div>
+          <h2 class="modal__title">${livro.titulo}</h2>
+          <p class="modal__autor">${livro.autor}</p>
+          <p class="modal__ano">Publicado em ${livro.anoPublicacao}</p>
+          <p class="modal__desc">${livro.descricao}</p>
+          <div class="card__tags">${tagsHtml}</div>
+          <span class="card__status ${livro.disponivel ? "card__status--ok" : "card__status--off"}" style="margin-top:1rem;display:inline-block">
+            ${livro.disponivel ? "✔ Disponível para empréstimo" : "✘ Atualmente emprestado"}
+          </span>
+        `;
+
+      document.getElementById("modalOverlay").classList.add("modal-overlay--visible");
+    }
+
+    // Filtros
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("filter-btn--active"));
+        btn.classList.add("filter-btn--active");
+        renderizar(btn.dataset.category);
+      });
+    });
+
+    // Fechar modal
+    document.getElementById("modalClose").addEventListener("click", () => {
+      document.getElementById("modalOverlay").classList.remove("modal-overlay--visible");
+    });
+    document.getElementById("modalOverlay").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget)
+        document.getElementById("modalOverlay").classList.remove("modal-overlay--visible");
+    });
+
+    renderizar();
+  </script>
+</body>
+
+</html>

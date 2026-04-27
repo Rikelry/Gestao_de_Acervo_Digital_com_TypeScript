@@ -1,0 +1,15 @@
+{
+  "name": "gestao_de_acervo_digital_com_typescript",
+  "version": "1.0.0",
+  "description": "**Objetivo:** Criar um sistema simplificado de gerenciamento de livros e empréstimos, aplicando tipagem estática e utilitários para reaproveitamento de código.",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.16.4",
+    "typescript": "^6.0.3"
+  }
+}
