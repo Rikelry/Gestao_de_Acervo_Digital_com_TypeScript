@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acervo de Livros</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <span class="header__icon">📚</span>
+      <h1 class="header__title">Acervo de Livros</h1>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Filtro por categoria -->
+    <section class="filters">
+      <button class="filter-btn filter-btn--active" data-category="todos">Todos</button>
+      <button class="filter-btn" data-category="Programação">Programação</button>
+      <button class="filter-btn" data-category="Design">Design</button>
+      <button class="filter-btn" data-category="Ficção">Ficção</button>
+      <button class="filter-btn" data-category="Boas Práticas">Boas Práticas</button>
+      <button class="filter-btn" data-category="TypeScript">TypeScript</button>
+      <button class="filter-btn" data-category="UX">UX</button>
+      <button class="filter-btn" data-category="Cyberpunk">Cyberpunk</button>
+    </section>
+
+    <!-- Grid de livros -->
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <!-- Modal de detalhes -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <button class="modal__close" id="modalClose">✕</button>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/livros.ts"></script>
+</body>
+
+</html>
